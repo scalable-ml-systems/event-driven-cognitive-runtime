@@ -1,0 +1,1 @@
+A modular runtime for building event‑driven, cognitive, and agentic systems. It provides a unified execution layer that connects events, tools, models, and stateful reasoning into a coherent, observable pipeline. Designed for production‑grade orchestration of AI‑driven workflows.
