@@ -13,6 +13,7 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+*.pem
 
 ###########################################
 # Personal Notes do not copy to public repos
