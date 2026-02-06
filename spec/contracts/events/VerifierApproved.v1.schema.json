@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:fraud:events:VerifierApproved:v1",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {}
+}

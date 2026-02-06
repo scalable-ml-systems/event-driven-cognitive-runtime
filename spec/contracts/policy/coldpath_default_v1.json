@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "policy_profile": "coldpath_default_v1",
+  "budgets": { "max_ai_calls_per_case": 3 },
+  "require_verifier": true,
+  "forbid_free_text_authority": true
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "allowed_tools": [
+    { "name": "ip_reputation_lookup", "version": "1.0.0" },
+    { "name": "device_reputation_lookup", "version": "1.0.0" }
+  ]
+}

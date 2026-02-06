@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "allowed_claims": {
+    "risk_classification": ["LOW", "MEDIUM", "HIGH"],
+    "risk_factor": [
+      "ip_reputation_negative",
+      "device_reputation_negative",
+      "new_device",
+      "geo_mismatch"
+    ]
+  }
+}

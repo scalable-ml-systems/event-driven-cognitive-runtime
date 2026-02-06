@@ -1,0 +1,122 @@
+dag_id: unusual_transfer_v1
+dag_version: 1
+description: >
+  Cold-path investigation for unusual transfer signals involving
+  new devices, IP risk, or anomalous destinations.
+  Produces an auditable, replayable case dossier.
+
+# =========================
+# Global DAG Constraints
+# =========================
+constraints:
+  acyclic: true
+  verifier_required: true
+  decision_requires_verifier: true
+  ai_nodes_must_flow_to_verifier: true
+  replay_safe: true
+
+# =========================
+# Input Contract
+# =========================
+inputs:
+  required_signal:
+    event_type: SignalIngested
+    signal_type: unusual_transfer
+
+# =========================
+# Nodes
+# =========================
+nodes:
+
+  # ---- Evidence Gathering ----
+  - node_id: gather_ip_reputation
+    node_type: TOOL
+    description: Lookup IP reputation for the transaction IP.
+    tool:
+      name: ip_reputation_lookup
+      version: "1.0.0"
+    policy_profile: coldpath_default_v1
+    outputs:
+      - artifact_ref: ip_reputation_artifact
+
+  - node_id: gather_device_reputation
+    node_type: TOOL
+    description: Lookup device reputation for the transaction device.
+    tool:
+      name: device_reputation_lookup
+      version: "1.0.0"
+    policy_profile: coldpath_default_v1
+    outputs:
+      - artifact_ref: device_reputation_artifact
+
+  # ---- AI Assessment ----
+  - node_id: assess_risk
+    node_type: AI
+    ai_role: assessor
+    model_profile: risk_assessor_v1
+    description: >
+      Assess fraud risk using bounded claim space based on
+      gathered evidence.
+    inputs:
+      required_artifacts:
+        - ip_reputation_artifact
+        - device_reputation_artifact
+    outputs:
+      - claim_type: risk_classification
+      - claim_type: risk_factor
+    policy_profile: coldpath_default_v1
+
+  # ---- Verification ----
+  - node_id: verify_assessment
+    node_type: VERIFIER
+    description: >
+      Validate AI claims against schema, evidence,
+      confidence thresholds, and policy.
+    inputs:
+      required_claims:
+        - risk_classification
+    policy_profile: coldpath_default_v1
+
+  # ---- Decision ----
+  - node_id: propose_decision
+    node_type: DECISION
+    description: >
+      Propose bounded investigation outcome
+      based on verified claims.
+    decision:
+      decision_type: investigation_outcome
+      allowed_values:
+        - CLEAR
+        - ESCALATE_REVIEW
+    policy_profile: coldpath_default_v1
+
+  # ---- Dossier ----
+  - node_id: generate_dossier
+    node_type: DOSSIER
+    description: Generate deterministic case dossier.
+    policy_profile: coldpath_default_v1
+
+# =========================
+# Edges (Dependencies)
+# =========================
+edges:
+  - from: gather_ip_reputation
+    to: assess_risk
+
+  - from: gather_device_reputation
+    to: assess_risk
+
+  - from: assess_risk
+    to: verify_assessment
+
+  - from: verify_assessment
+    to: propose_decision
+
+  - from: propose_decision
+    to: generate_dossier
+
+# =========================
+# Termination
+# =========================
+terminal_node: generate_dossier
+

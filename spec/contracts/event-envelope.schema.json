@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:fraud:contracts:event-envelope:v1",
+  "title": "EventEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+  "event_id",
+  "event_type",
+  "schema_version",
+  "occurred_at",
+  "produced_at",
+  "case_id",
+  "workflow_id",
+  "step_id",
+  "tool_call_id",
+  "ai_call_id",
+  "correlation_id",
+  "causation_id",
+  "traceparent",
+  "producer",
+  "env",
+  "payload"
+ ]
+  "properties": {
+    "event_id": { "type": "string", "minLength": 8 },
+    "event_type": { "type": "string", "minLength": 3 },
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "produced_at": { "type": "string", "format": "date-time" },
+
+    "case_id": { "type": "string", "minLength": 8 },
+    "workflow_id": { "type": ["string", "null"] },
+    "step_id": { "type": ["string", "null"] },
+    "tool_call_id": { "type": ["string", "null"] },
+    "ai_call_id": { "type": ["string", "null"] },
+
+    "correlation_id": { "type": "string", "minLength": 8 },
+    "causation_id": { "type": ["string", "null"] },
+
+    "traceparent": { "type": "string", "minLength": 10 },
+    "producer": { "type": "string", "minLength": 3 },
+    "env": { "type": "string", "enum": ["dev", "stage", "prod"] },
+
+    "payload": { "type": "object" }
+  }
+}

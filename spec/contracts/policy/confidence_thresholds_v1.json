@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "thresholds": {
+    "risk_classification": {
+      "HIGH": 0.70,
+      "MEDIUM": 0.60,
+      "LOW": 0.50
+    }
+  }
+}
