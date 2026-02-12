@@ -1,0 +1,96 @@
+Correct Order
+Step 1 — Bootstrap (state + lock)
+cd infra/terraform/00-bootstrap
+terraform init
+terraform plan
+terraform apply
+
+
+This should create:
+
+S3 bucket for remote state
+
+DynamoDB table for state lock
+
+After this, your remote backend exists.
+
+Step 2 — Dev Environment
+cd ../environments/dev
+terraform init
+terraform plan
+terraform apply
+
+
+This will:
+
+Configure backend to use S3
+
+Create VPC
+
+Create endpoints
+
+Create EKS
+
+Create IRSA
+
+Create RDS
+
+Create S3 buckets
+
+Create ECR repos
+
+🔍 Before You Run Plan (Important Check)
+
+Open:
+
+infra/terraform/environments/dev/backend.tf
+
+
+Make sure:
+
+bucket name matches what bootstrap created
+
+DynamoDB table name matches
+
+region matches
+
+If backend.tf references non-existent bucket → init fails.
+
+⚠️ First Apply Reality
+
+EKS often takes:
+
+8–15 minutes
+
+On first apply, Kubernetes/Helm provider may:
+
+fail once due to API not ready
+
+If that happens:
+
+just re-run terraform apply
+
+it usually stabilizes
+
+That’s normal.
+
+After Apply — Immediate Checks
+
+Run:
+
+aws eks update-kubeconfig --region <region> --name <cluster-name>
+kubectl get nodes
+
+
+You want:
+
+nodes in Ready state
+
+no pending CNI issues
+
+Then:
+
+kubectl get pods -A
+
+
+Make sure core system pods are running.

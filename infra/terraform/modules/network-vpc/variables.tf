@@ -10,3 +10,8 @@ variable "one_nat_gateway" {
   type    = bool
   default = true
 }
+
+variable "enable_nat" {
+  type    = bool
+  default = false
+}

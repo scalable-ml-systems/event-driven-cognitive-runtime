@@ -146,3 +146,8 @@ variable "acm_domain_name" {
   type    = string
   default = "*.example.com"
 }
+
+variable "enable_nat" {
+  type    = bool
+  default = false
+}

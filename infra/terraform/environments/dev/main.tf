@@ -9,6 +9,7 @@ module "network_vpc" {
   cidr            = var.vpc_cidr
   az_count        = var.az_count
   one_nat_gateway = var.one_nat_gateway
+  enable_nat      = var.enable_nat
 }
 
 # 2) EKS + nodegroups
@@ -74,10 +75,19 @@ module "dns" {
   hosted_zone_name = var.hosted_zone_name
 }
 
-module "acm" {
+# 8) module "acm" {
   source         = "../../modules/tls-acm"
   count          = var.enable_dns_tls ? 1 : 0
   domain_name    = var.acm_domain_name
   hosted_zone_id = module.dns[0].hosted_zone_id
+}
+
+# 9) vpc endpoints
+  module "vpc_endpoints" {
+  source             = "../../modules/network-vpc-endpoints"
+  vpc_id             = module.network_vpc.vpc_id
+  private_subnet_ids  = module.network_vpc.private_subnet_ids
+  route_table_ids     = module.network_vpc.private_route_table_ids
+  region              = var.region
 }
 

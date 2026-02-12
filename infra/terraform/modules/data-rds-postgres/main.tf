@@ -48,7 +48,10 @@ resource "aws_db_instance" "this" {
 
   multi_az            = var.multi_az
   publicly_accessible = false
-  skip_final_snapshot = true
+  final_snapshot_identifier = "${var.name}-final-${timestamp()}" (or deterministic pattern)
 
   backup_retention_period = 7
+  storage_encrypted = true
+  kms_key_id = var.kms_key_id
+
 }
