@@ -15,6 +15,7 @@ Thumbs.db
 *.log
 *.pem
 
+# do not copy 
 ecr-key-pair.pem
 
 ###########################################
